@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Hadamard Matrices to Autonomous Vision | KoriVision</title>
+  <meta name="description" content="Korin Lifshits on Hadamard matrices, block designs, and Walsh–Hadamard texture representations in early autonomous-driving vision.">
+  <meta name="author" content="Korin Lifshits">
+  <meta name="theme-color" content="#07111f">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="From Hadamard Matrices to Autonomous Vision">
+  <meta property="og:description" content="Block designs, Walsh–Hadamard filters, and a mathematical idea that resurfaced in practical computer vision.">
+  <meta property="og:url" content="https://korivision.com/research/hadamard-autonomous-vision.html">
+  <link rel="canonical" href="https://korivision.com/research/hadamard-autonomous-vision.html">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="research.css">
+</head>
+<body class="research-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" aria-label="Primary navigation">
+    <nav class="nav container">
+      <a class="wordmark" href="../index.html#top" aria-label="KoriVision home">KoriVision</a>
+      <div class="nav-links" aria-label="Section links">
+        <a href="../index.html#experience">Experience</a>
+        <a href="../index.html#expertise">Expertise</a>
+        <a href="../index.html#notes">Research Notes</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
+      <details class="mobile-menu">
+        <summary aria-controls="mobile-section-links">
+          Menu
+          <svg class="menu-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+            <path d="M3 6.5h14M3 13.5h14" />
+          </svg>
+        </summary>
+        <div class="mobile-nav-links" id="mobile-section-links">
+          <a href="../index.html#experience">Experience</a>
+          <a href="../index.html#expertise">Expertise</a>
+          <a href="../index.html#notes">Research Notes</a>
+          <a href="../index.html#contact">Contact</a>
+        </div>
+      </details>
+    </nav>
+    <script>
+      (() => {
+        const menu = document.querySelector(".mobile-menu");
+        const toggle = menu.querySelector("summary");
+        menu.addEventListener("click", (event) => {
+          const link = event.target.closest("a");
+          if (!link) return;
+          menu.open = false;
+          const section = document.querySelector(link.hash);
+          if (section) {
+            // Keep keyboard navigation at the chosen section without changing it.
+            const focusTarget = section.querySelector("a, button, [tabindex]");
+            if (focusTarget) focusTarget.focus({ preventScroll: true });
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && menu.open) {
+            menu.open = false;
+            toggle.focus();
+          }
+        });
+        document.addEventListener("pointerdown", (event) => {
+          if (!menu.contains(event.target)) menu.open = false;
+        });
+        window.matchMedia("(min-width: 721px)").addEventListener("change", () => {
+          menu.open = false;
+        });
+      })();
+    </script>
+  </header>
+  <main id="main">
+    <article class="research-article" aria-labelledby="article-title">
+      <header class="article-heading">
+        <p class="section-kicker">Research Notes · Mathematics &amp; Vision</p>
+        <h1 id="article-title">From Hadamard Matrices to Autonomous Vision</h1>
+        <p class="article-subtitle">Block designs, Walsh–Hadamard filters, and a mathematical idea that resurfaced in practical computer vision.</p>
+        <p class="article-byline">Korin Lifshits <span aria-hidden="true">·</span> <time datetime="2026-09-20">20 September 2026</time></p>
+      </header>
+
+      <section aria-labelledby="why-hadamard">
+        <h2 id="why-hadamard">Why I returned to Hadamard matrices</h2>
+        <p>Years after first working on Hadamard matrices and incomplete block designs as mathematical objects, I encountered the same structure again in practical autonomous-driving vision. The setting had changed, but the arrangement of plus and minus signs was familiar.</p>
+        <p>My graduate research in mathematics at the Hebrew University included Hadamard matrices, incomplete block designs, and fractal methods, working with Profs. Perles and Levin. By the time I joined Mobileye, this mathematical structure was already very familiar to me. So when Walsh–Hadamard texture kernels appeared in our DARPA Grand Challenge computer-vision work, the connection was not merely something I noticed years later — it was part of how I understood the representation at the time.</p>
+        <p>Looking back, I see a useful connection between those experiences: a discrete structure can be studied for its mathematical properties and later become a practical way to represent visual information.</p>
+      </section>
+
+      <section aria-labelledby="mathematical-object">
+        <h2 id="mathematical-object">The mathematical object</h2>
+        <p>A Hadamard matrix <var>H</var> is an <var>n</var> × <var>n</var> matrix whose entries are +1 or −1 and whose rows are mutually orthogonal:</p>
+        <div class="equation" role="math" aria-label="H times H transpose equals n times the identity matrix">H H<sup>T</sup> = n I</div>
+        <p>Here <var>I</var> is the identity matrix. Each row has squared length <var>n</var>; distinct rows have dot product zero. Dividing <var>H</var> by √<var>n</var> gives an orthonormal transform. This is a structured binary representation, with two possible signs rather than arbitrary coefficients.</p>
+        <p>Balance needs a qualification. After sign changes that make the first row and column all +1, every other row has equally many +1 and −1 entries. It must sum to zero to be orthogonal to the first row. This is the normalized convention described in the <a href="https://www.isibang.ac.in/~d.yogesh/Course_Notes/DM1/Ch9.S7.html">Indian Statistical Institute lecture notes</a>.</p>
+        <p>Two distinct rows agree in half their positions and disagree in half. Mapping signs to bits turns that separation into Hamming distance <var>n</var>/2: a direct connection between orthogonality and coding ideas. The appeal is precise control over how representations differ.</p>
+      </section>
+
+      <section aria-labelledby="block-designs">
+        <h2 id="block-designs">Hadamard matrices and block designs</h2>
+        <p>A block design organizes a set of points into subsets called blocks. In a balanced incomplete block design, every block contains the same number of points, every point occurs equally often, and every pair of distinct points occurs together in a fixed number of blocks. “Incomplete” means a block contains fewer than all the points.</p>
+        <p>One specific construction makes the connection concrete. Start with a normalized Hadamard matrix of order 4<var>t</var>, delete its first row and column, and replace −1 by 0. Interpreting the remaining matrix as an incidence matrix gives a symmetric 2-(4<var>t</var> − 1, 2<var>t</var> − 1, <var>t</var> − 1) design. There are 4<var>t</var> − 1 points and equally many blocks; each block has 2<var>t</var> − 1 points, and each pair occurs in <var>t</var> − 1 blocks.</p>
+        <p>This is a particular family, not a correspondence between arbitrary incomplete block designs and arbitrary matrices. In this construction, orthogonality becomes a statement about balanced incidence. <a href="https://maths.nuigalway.ie/~padraig/Docs/PadraigOCathainMaynooth.pdf">Ó Catháin’s notes on designs and Hadamard matrices</a> give the underlying relationship.</p>
+      </section>
+
+      <section aria-labelledby="walsh-filters">
+        <h2 id="walsh-filters">From matrices to Walsh–Hadamard filters</h2>
+        <p>A row can also be read as a projection: add the signal values under its +1 entries and subtract those under its −1 entries. In the usual power-of-two Walsh–Hadamard transform, a recursively constructed Hadamard basis supplies a full set of these measurements. Walsh ordering arranges the basis by its pattern of sign changes.</p>
+        <p>For images, products of one-dimensional basis functions form two-dimensional ±1 filters. Applied to a patch, they measure contrasting spatial patterns. The filters are binary-valued; the image intensities and filter responses need not be binary. Collections of responses can serve as texture features.</p>
+        <p>The arithmetic is attractive: the unnormalized transform uses additions and subtractions, without arbitrary learned multiplications. Its recursive structure yields an O(<var>n</var> log₂ <var>n</var>) fast transform; normalization is a separate scaling step. <a href="https://pages.hmc.edu/ruye/e161/lectures/wht/node2.html">Ruye Wang’s transform notes</a> show that decomposition. Orthogonality alone does not give every Hadamard matrix this fast factorization, nor does cheap arithmetic guarantee that a feature will discriminate the visual categories we care about.</p>
+      </section>
+
+      <section aria-labelledby="mobileye-darpa">
+        <h2 id="mobileye-darpa">Mobileye and the DARPA Grand Challenge</h2>
+        <p>A few years later, at Mobileye, the mathematics unexpectedly reappeared in a very practical setting. I worked directly with Yaniv Alon, Andras Ferencz, and Prof. Amnon Shashua on computer-vision work connected to the DARPA Grand Challenge, in the context of off-road perception and drivable-path understanding.</p>
+        <p>My contribution was hands-on: implementation, experimentation, and algorithm improvement. Andras shared implementation code with me, which I worked on and improved as part of the project, and I discussed the technical work directly with Yaniv, Andras, and Amnon. Walsh–Hadamard texture representations and kernels were part of that work.</p>
+        <p>Alon, Ferencz, and Shashua’s <a href="https://www.cs.huji.ac.il/~shashua/papers/cvpr06-final.pdf">CVPR 2006 paper</a> provides a public technical reference for the related DARPA Grand Challenge work and its use of Walsh–Hadamard texture features. My account here describes my own implementation and experimental contribution to that work.</p>
+      </section>
+
+      <section aria-labelledby="connection-now">
+        <h2 id="connection-now">The connection I see now</h2>
+        <p>In the mathematical setting, I was working with Hadamard matrices and combinatorial structure. In vision, the same orthogonal sign patterns offered an efficient representation of local appearance. The common structure is what connects these experiences for me.</p>
+        <p>The broader design-theoretic interpretation is retrospective; the familiarity of the Hadamard structure itself was not. I am not suggesting that block-design theory was explicitly used to select the vision filters, but the shared mathematical structure was already meaningful to me while working on them.</p>
+        <figure class="structure-diagram">
+          <svg viewBox="0 0 400 476" role="img" aria-labelledby="structure-title structure-description">
+            <title id="structure-title">A connection across mathematical and engineering settings</title>
+            <desc id="structure-description">Hadamard matrices, combinatorial and block designs, orthogonal binary structure, Walsh–Hadamard filters, practical vision representations, and a question about efficient structured representations today. The arrows show a conceptual connection, not a historical derivation.</desc>
+            <defs>
+              <marker id="note-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="8" markerHeight="8" orient="auto">
+                <path d="M2 1l4 3-4 3" />
+              </marker>
+            </defs>
+            <g class="structure-boxes">
+              <rect x="10" y="10" width="380" height="48" rx="4" />
+              <rect x="10" y="90" width="380" height="48" rx="4" />
+              <rect x="10" y="170" width="380" height="48" rx="4" />
+              <rect x="10" y="250" width="380" height="48" rx="4" />
+              <rect x="10" y="330" width="380" height="48" rx="4" />
+              <rect class="open-question" x="10" y="410" width="380" height="56" rx="4" />
+            </g>
+            <g class="structure-arrows" marker-end="url(#note-arrow)">
+              <path d="M200 58v30" /><path d="M200 138v30" /><path d="M200 218v30" />
+              <path d="M200 298v30" /><path d="M200 378v30" />
+            </g>
+            <g class="structure-labels">
+              <text x="200" y="34">Hadamard matrices</text>
+              <text x="200" y="114">Combinatorial / block designs</text>
+              <text x="200" y="194">Orthogonal binary structure</text>
+              <text x="200" y="274">Walsh–Hadamard filters</text>
+              <text x="200" y="354">Practical vision representations</text>
+              <text x="200" y="429">Efficient structured</text>
+              <text x="200" y="450">representations today?</text>
+            </g>
+          </svg>
+          <figcaption>A conceptual bridge across settings. The final step is an open research question.</figcaption>
+        </figure>
+      </section>
+
+      <section aria-labelledby="research-question">
+        <h2 id="research-question">A modern research question</h2>
+        <p>The question I would return to is how much of a structured basis a visual task actually needs. Keeping the full orthonormal transform preserves information; keeping a subset generally does not. Any useful selection rule must therefore be judged against a task and its data.</p>
+        <p>Design-theoretic constraints might offer a way to organize that selection. Compact visual descriptors, efficient feature transforms, structured sensing, retrieval and representation learning, and hardware-efficient vision are possible settings in which to investigate the idea.</p>
+        <p>These are directions to test, not established results or a claim of a new invention. A meaningful study would compare constrained selection with simple and learned alternatives at the same feature budget, and measure actual computation as well as task performance. Fewer coefficients alone would not establish a useful speedup.</p>
+        <p class="research-question">Can design-theoretic constraints help choose a compact subset of structured Hadamard projections that preserves discriminative information while reducing computation?</p>
+      </section>
+
+      <aside class="article-references" aria-labelledby="historical-reference">
+        <h2 id="historical-reference">Historical project reference</h2>
+        <p class="reference-label">Related project publication</p>
+        <p>Yaniv Alon, Andras Ferencz, Amnon Shashua.<br>
+          <cite>“Off-road Path Following using Region Classification and Geometric Projection Constraints.”</cite><br>
+          CVPR 2006, volume 1, pp. 689–696. DOI: 10.1109/CVPR.2006.213.</p>
+        <p><a href="https://www.cs.huji.ac.il/~shashua/papers/cvpr06-final.pdf">Read the author-hosted paper (PDF)</a></p>
+        <p class="source-note"><strong>Source note.</strong> Historical publication details were verified from the public author-hosted paper, <a href="https://pages.cs.huji.ac.il/shashua/pages/publications.html">Prof. Shashua’s university publication list</a>, and <a href="https://api.crossref.org/works/10.1109/CVPR.2006.213">IEEE’s deposited publication metadata</a>. Personal recollections are my own account, distinct from the paper’s authorship. No former-employer proprietary material was used to prepare this note. The text and diagram are newly prepared; no private code, data, or implementation details are reproduced.</p>
+      </aside>
+      <p class="article-return"><a href="../index.html#notes">← Back to Research Notes</a></p>
+    </article>
+  </main>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© 2026 KoriVision. Korin Lifshits.</p>
+      <p>Engineering robust perception for the physical world.</p>
+    </div>
+  </footer>
+</body>
+</html>
