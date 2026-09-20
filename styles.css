@@ -576,3 +576,379 @@ h3 {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* Header and hero refinement. All following styles are scoped to these areas. */
+.site-header {
+  background: #091321;
+  backdrop-filter: none;
+  border-bottom-color: #223044;
+}
+
+.site-header .nav {
+  min-height: 72px;
+  gap: 1.5rem;
+}
+
+.site-header .wordmark {
+  display: inline;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+.site-header .nav-links {
+  gap: 1.5rem;
+}
+
+.site-header .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 0;
+  border-radius: 0;
+  color: #b4c0ce;
+  font-size: 0.875rem;
+}
+
+.site-header .nav-links a:hover,
+.site-header .nav-links a:focus-visible {
+  color: #f3f8ff;
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 0.35em;
+}
+
+.site-header a:focus-visible,
+.hero .button:focus-visible {
+  outline: 2px solid #a9c5da;
+  outline-offset: 5px;
+}
+
+.hero {
+  padding: 88px 0 84px;
+  overflow: visible;
+  background: #091321;
+  border-bottom: 1px solid #223044;
+}
+
+.hero::after {
+  content: none;
+}
+
+.hero .hero-composition {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 48px;
+}
+
+.hero .hero-copy {
+  min-width: 0;
+}
+
+.hero h1 {
+  max-width: none;
+  margin: 0 0 14px;
+  color: #f3f6fa;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: clamp(4.75rem, 5.56vw, 5rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+
+.hero .hero-role {
+  margin: 0 0 22px;
+  color: #d5dfe9;
+  font-size: clamp(1.875rem, 2.3vw, 2rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.hero .hero-specializations {
+  margin: 0 0 24px;
+  color: #a4bdd0;
+  font-size: 1.1875rem;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+}
+
+.hero .hero-role-group {
+  display: inline-block;
+}
+
+.hero .hero-description {
+  max-width: 650px;
+  margin: 0;
+  color: #b4c0ce;
+  font-size: 1.25rem;
+  line-height: 1.65;
+}
+
+.hero .hero-actions {
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.hero .button {
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border: 1px solid #344458;
+  border-radius: 4px;
+  background: transparent;
+  color: #ccd7e3;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: none;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.hero .button-primary {
+  border-color: #49627a;
+  background: #253d52;
+  color: #f3f6fa;
+}
+
+.hero .button:hover,
+.hero .button:focus-visible {
+  border-color: #8aa5bc;
+  background: #1c2d3f;
+  color: #fff;
+  transform: none;
+}
+
+@media (max-width: 720px) {
+  .site-header .container,
+  .hero .container {
+    width: calc(100% - 48px);
+  }
+
+  .site-header .nav {
+    gap: 6px;
+    min-height: 0;
+    padding: 14px 0 8px;
+  }
+
+  .site-header .wordmark {
+    font-size: 1.125rem;
+  }
+
+  .site-header .nav-links {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .site-header .nav-links a {
+    font-size: 0.8125rem;
+  }
+
+  .hero {
+    padding: 44px 0 48px;
+  }
+
+  .hero h1 {
+    margin-bottom: 14px;
+    font-size: clamp(2.25rem, 11.3vw, 3rem);
+    line-height: 1.12;
+  }
+
+  .hero .hero-role {
+    max-width: 360px;
+    margin-bottom: 20px;
+    font-size: 1.375rem;
+    line-height: 1.4;
+  }
+
+  .hero .hero-specializations {
+    max-width: 360px;
+    margin-bottom: 22px;
+    font-size: 1rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .hero .hero-specialization-break,
+  .hero .hero-description-break {
+    display: none;
+  }
+
+  .hero .hero-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  .hero .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .hero .button {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+}
+
+/* Final polish: desktop schematic and a compact, native mobile menu. */
+.hero .perception-visual {
+  width: 100%;
+  max-width: 460px;
+  margin: 0;
+  padding-top: 6px;
+  justify-self: end;
+}
+
+.hero .perception-visual svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hero .flow-boxes {
+  fill: none;
+  stroke: #3b5267;
+  stroke-width: 1;
+}
+
+.hero .flow-lines,
+.hero #flow-arrow path {
+  fill: none;
+  stroke: #58748b;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.hero .flow-labels {
+  fill: #a5b7c8;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.hero .flow-output {
+  fill: #c6d5e2;
+}
+
+.hero .perception-visual figcaption {
+  margin-top: 20px;
+  color: #8297aa;
+  font-size: 0.75rem;
+  letter-spacing: 0.035em;
+  text-align: center;
+}
+
+.site-header .mobile-menu {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .hero .hero-composition {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero .perception-visual {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 7.4vw, 4.75rem);
+  }
+}
+
+@media (max-width: 720px) {
+  .site-header .nav {
+    position: relative;
+    min-height: 68px;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 0;
+  }
+
+  .site-header .nav-links {
+    display: none;
+  }
+
+  .site-header .mobile-menu {
+    display: block;
+  }
+
+  .site-header .mobile-menu summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 8px;
+    color: #cbd7e3;
+    font-size: 0.875rem;
+    line-height: 1;
+    list-style: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .site-header .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-header .mobile-menu summary:focus-visible {
+    outline: 2px solid #a9c5da;
+    outline-offset: 3px;
+  }
+
+  .site-header .mobile-menu[open] summary {
+    background: #1a2b3d;
+  }
+
+  .site-header .menu-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+
+  .site-header .mobile-nav-links {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 1px);
+    z-index: 1;
+    display: grid;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid #344458;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    background: #101e2e;
+  }
+
+  .site-header .mobile-nav-links a {
+    display: flex;
+    align-items: center;
+    min-height: 46px;
+    padding: 10px 12px;
+    color: #d5dfe9;
+    font-size: 0.9375rem;
+    border-radius: 2px;
+  }
+
+  .site-header .mobile-nav-links a:hover,
+  .site-header .mobile-nav-links a:focus-visible {
+    background: #203247;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.25rem, 11.3vw, 3rem);
+  }
+}
