@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">KoriVision secondary I monogram</title>
+  <rect x="14.75" y="9" width="2.5" height="14" fill="#f3f8ff"/>
+  <g fill="none" stroke="#f3f8ff" stroke-width="0.8" stroke-linecap="round">
+    <path d="M5.125 8 Q16 4 26.875 8"/>
+    <path d="M5.125 24 Q16 28 26.875 24"/>
+  </g>
+</svg>
