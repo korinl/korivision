@@ -332,7 +332,6 @@ h3 {
 .section-heading p,
 .card p,
 .case-card p,
-.ecosystem-list p,
 .contact-card p {
   color: var(--muted);
 }
@@ -361,7 +360,6 @@ h3 {
 
 .card,
 .case-card,
-.ecosystem-list article,
 .contact-card {
   border: 1px solid var(--line);
   background: var(--panel);
@@ -425,17 +423,6 @@ h3 {
   outline: none;
 }
 
-.ecosystem-list {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.ecosystem-list article {
-  padding: 1rem;
-  border-radius: 18px;
-}
-
-.ecosystem-list p,
 .case-card p,
 .card p {
   margin-bottom: 0;
