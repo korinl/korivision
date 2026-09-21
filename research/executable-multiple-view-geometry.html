@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Executable Multiple-View Geometry | KoriVision</title>
+  <meta name="description" content="Korin Lifshits on symbolic verification, projective geometry, and a 2011 Mathematica project with Prof. Michael Werman.">
+  <meta name="author" content="Korin Lifshits">
+  <meta name="theme-color" content="#07111f">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Executable Multiple-View Geometry">
+  <meta property="og:description" content="Symbolic verification, projective geometry, and a Mathematica experiment in computer vision.">
+  <meta property="og:url" content="https://korivision.com/research/executable-multiple-view-geometry.html">
+  <link rel="canonical" href="https://korivision.com/research/executable-multiple-view-geometry.html">
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="research.css">
+  <link rel="stylesheet" href="mvg.css">
+</head>
+<body class="research-page mvg-note">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" aria-label="Primary navigation">
+    <nav class="nav container">
+      <a class="wordmark" href="../index.html#top" aria-label="KoriVision home">KoriVision</a>
+      <div class="nav-links" aria-label="Section links">
+        <a href="../index.html#experience">Experience</a>
+        <a href="../index.html#expertise">Expertise</a>
+        <a href="../index.html#notes">Research Notes</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
+      <details class="mobile-menu">
+        <summary aria-controls="mobile-section-links">
+          Menu
+          <svg class="menu-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+            <path d="M3 6.5h14M3 13.5h14" />
+          </svg>
+        </summary>
+        <div class="mobile-nav-links" id="mobile-section-links">
+          <a href="../index.html#experience">Experience</a>
+          <a href="../index.html#expertise">Expertise</a>
+          <a href="../index.html#notes">Research Notes</a>
+          <a href="../index.html#contact">Contact</a>
+        </div>
+      </details>
+    </nav>
+    <script>
+      (() => {
+        const menu = document.querySelector(".mobile-menu");
+        const toggle = menu.querySelector("summary");
+        menu.addEventListener("click", (event) => {
+          const link = event.target.closest("a");
+          if (!link) return;
+          menu.open = false;
+          const section = document.querySelector(link.hash);
+          if (section) {
+            // Keep keyboard navigation at the chosen section without changing it.
+            const focusTarget = section.querySelector("a, button, [tabindex]");
+            if (focusTarget) focusTarget.focus({ preventScroll: true });
+          }
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && menu.open) {
+            menu.open = false;
+            toggle.focus();
+          }
+        });
+        document.addEventListener("pointerdown", (event) => {
+          if (!menu.contains(event.target)) menu.open = false;
+        });
+        window.matchMedia("(min-width: 721px)").addEventListener("change", () => {
+          menu.open = false;
+        });
+      })();
+    </script>
+  </header>
+  <main id="main">
+    <article class="research-article" aria-labelledby="article-title">
+      <header class="article-heading">
+        <p class="section-kicker">Research Notes · Geometry &amp; Computation</p>
+        <h1 id="article-title">Executable Multiple-View Geometry</h1>
+        <p class="article-subtitle">Symbolic verification, projective geometry, and a Mathematica experiment in computer vision.</p>
+        <p class="article-byline">Korin Lifshits <span aria-hidden="true">·</span> <time datetime="2026-09-21">21 September 2026</time></p>
+      </header>
+
+      <section aria-labelledby="returning-to-geometry">
+        <h2 id="returning-to-geometry">Why I am revisiting this</h2>
+        <p>In 2011, working with Prof. Michael Werman at the Hebrew University Computer Vision Lab, I explored how multiple-view geometry could be expressed as executable symbolic mathematics. The project used Mathematica and computer algebra to formulate and check relationships from geometric computer vision, using Richard Hartley and Andrew Zisserman’s <cite>Multiple View Geometry in Computer Vision</cite> as the organizing reference.</p>
+        <p>The attraction was the movement between a geometric argument and a computation. A statement about cameras, points, lines, or planes could be translated into variables and equations. Those equations could then be manipulated, simplified, or solved, with the assumptions made explicit enough to inspect. Writing that translation was itself mathematical work: the choice of representation often determined whether the calculation clarified the geometry or obscured it.</p>
+        <p>The project aimed at a broad executable treatment of the material; the surviving implementation contains examples spanning several major parts of multiple-view geometry. I am returning to it because the underlying question still interests me: how can software help us examine a geometric model before we entrust a numerical pipeline to it?</p>
+      </section>
+
+      <section aria-labelledby="executable-algebra">
+        <h2 id="executable-algebra">The idea: geometry as executable algebra</h2>
+        <p>Projective geometry gives many visual relationships a compact algebraic form. A point in the image plane can be represented by a nonzero three-component vector, with nonzero scalar multiples identifying the same point. A line is another homogeneous vector; incidence becomes a dot product equal to zero. A camera maps a homogeneous 3D point into a homogeneous image point, while matrix rank and determinant conditions distinguish valid configurations from degenerate ones.</p>
+        <p>This representation makes a particular workflow possible. First specify the geometric claim. Then choose symbolic variables, write the constraints, and ask what follows algebraically. A result may be an identity under stated assumptions, a description of admissible solutions, or a condition under which the proposed relationship fails. An expression that does not simplify is not automatically a counterexample: it may require a better formulation or stronger assumptions.</p>
+
+        <figure class="structure-diagram mvg-flow">
+          <svg viewBox="0 0 420 492" role="img" aria-labelledby="flow-title flow-desc">
+            <title id="flow-title">From a geometric statement to a symbolic result</title>
+            <desc id="flow-desc">Five stages: geometric statement, symbolic representation, algebraic constraints or identities, Simplify Reduce or Solve, then an identity under assumptions, a solution set, or a failure case.</desc>
+            <defs><marker id="mvg-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1 L6 4 L1 7" /></marker></defs>
+            <g class="structure-boxes"><rect x="35" y="8" width="350" height="62" rx="5"/><rect x="35" y="107" width="350" height="62" rx="5"/><rect x="35" y="206" width="350" height="62" rx="5"/><rect x="35" y="305" width="350" height="62" rx="5"/><rect x="35" y="404" width="350" height="78" rx="5"/></g>
+            <g class="mvg-lines" marker-end="url(#mvg-arrow)"><path d="M210 74v27"/><path d="M210 173v27"/><path d="M210 272v27"/><path d="M210 371v27"/></g>
+            <g class="structure-labels"><text x="210" y="40">Geometric statement</text><text x="210" y="139">Symbolic representation</text><text x="210" y="238">Constraints / identities</text><text x="210" y="337">Simplify / Reduce / Solve</text><text x="210" y="433">Identity under assumptions,</text><text x="210" y="457">solution set, or failure case</text></g>
+          </svg>
+          <figcaption>A conceptual workflow, newly drawn for this note. The assumptions travel with the calculation.</figcaption>
+        </figure>
+
+        <p>In Wolfram’s terminology, <a href="https://reference.wolfram.com/language/ref/Simplify.html"><code>Simplify</code></a> transforms expressions using supplied assumptions, <a href="https://reference.wolfram.com/language/ref/Reduce.html"><code>Reduce</code></a> describes solutions to logical combinations of algebraic conditions, and <a href="https://reference.wolfram.com/language/ref/Solve.html"><code>Solve</code></a> returns solution rules. These operations support different questions; they are not interchangeable certificates. I use symbolic verification here in the computer-algebra sense: exact symbolic manipulation under stated assumptions, rather than formal proof-assistant verification.</p>
+      </section>
+
+      <section aria-labelledby="implemented">
+        <h2 id="implemented">What we implemented</h2>
+        <p>My contribution centered on implementing and iterating symbolic checks in Mathematica across several connected areas. I find it more useful to describe that scope through the geometry than through a list of programs:</p>
+        <dl class="mvg-topics">
+          <dt>Projective invariants and conics</dt>
+          <dd>Symbolic treatment of line transformations, conic transformations, and cross-ratio. These examples asked which relationships survive a change of projective coordinates and how transformation rules can be checked explicitly.</dd>
+          <dt>Homographies and estimation</dt>
+          <dd>Homography estimation, including line correspondences, transformation invariance, and Sampson-error calculations with derivative or Jacobian expressions. This brought the algebra of geometric constraints into contact with estimation.</dd>
+          <dt>Camera and calibration geometry</dt>
+          <dd>Back-projected rays and dual Plücker line representations, together with calibration matrices, vanishing points, orthogonal directions, and relationships involving the image of the absolute conic.</dd>
+          <dt>Two-view geometry</dt>
+          <dd>Essential- and fundamental-matrix structure, the planar-mirror configuration, and reconstruction ambiguity. These examples made coordinate conventions and the distinction between a scene and its image evidence particularly important.</dd>
+          <dt>3D structure and reconstruction</dt>
+          <dd>Implicit image relationships, structure computation, homography-at-infinity relationships, and scene planes and homographies. The emphasis was on expressing relationships between representations and checking their algebraic consequences.</dd>
+        </dl>
+        <p>That breadth should not be read as complete coverage of the book. It describes the surviving examples and the direction of the work. The two explanations below are newly written illustrations of the underlying approach, rather than reproductions of the original implementation.</p>
+      </section>
+
+      <section aria-labelledby="projective-invariance">
+        <h2 id="projective-invariance">Example 1 — projective invariance</h2>
+        <p>Consider four distinct points on a projective line. Represent each by a nonzero two-component column vector, and define the bracket of two representatives as their two-by-two determinant:</p>
+        <div class="equation mvg-equation" role="math" aria-label="Bracket u v equals u zero times v one minus u one times v zero">[u, v] = u<sub>0</sub>v<sub>1</sub> − u<sub>1</sub>v<sub>0</sub></div>
+        <p>For one consistent ordering convention, their cross-ratio is the following quotient. Each point occurs once in the numerator and once in the denominator, so its arbitrary homogeneous scale cancels.</p>
+        <div class="equation mvg-equation" role="math" aria-label="Cross-ratio of a b c d equals bracket a c times bracket b d divided by bracket a d times bracket b c">CR(a, b; c, d) = <span class="mvg-fraction"><span>[a, c] [b, d]</span><span>[a, d] [b, c]</span></span></div>
+        <p>Now apply the same nonsingular two-by-two matrix <var>M</var> to all four points. The key identity is small enough to derive directly by expanding the determinant:</p>
+        <div class="equation mvg-equation" role="math" aria-label="Bracket M u M v equals determinant M times bracket u v">[Mu, Mv] = det(M) [u, v]</div>
+        <p>There are two determinant factors above the fraction bar and two below it. They cancel, leaving the original cross-ratio. A symbolic system can check the bracket identity first, then apply it to the quotient. This separates a reusable algebraic fact from the geometric statement it supports.</p>
+        <p>For a concrete new example, take affine coordinates 0, 1, 2, and 4, and transform them by <var>f</var>(<var>t</var>) = (2<var>t</var> + 1)/(<var>t</var> + 3). Their images are 1/3, 3/4, 1, and 9/7. With the convention above, both cross-ratios are exactly 3/2. Rational arithmetic makes this a transparent check rather than a comparison of rounded decimals.</p>
+        <p>The conditions matter as much as the cancellation. The matrix must be nonsingular, the point representatives nonzero, and the denominator brackets nonzero. If denominators are cleared before these restrictions are recorded, a symbolic equality can hold even where the original quotient is undefined. A useful executable statement therefore includes its domain, not just its final simplified expression.</p>
+      </section>
+
+      <section aria-labelledby="mirror-geometry">
+        <h2 id="mirror-geometry">Example 2 — mirror geometry</h2>
+        <p>A planar mirror gives a useful example of geometry hidden inside an image. A camera may see a point directly and also through its reflection. The reflected path can be unfolded into a straight line toward a virtual camera obtained by reflecting the real camera across the mirror plane. This gives a two-view interpretation even though there is only one physical camera.</p>
+
+        <figure class="structure-diagram mvg-mirror">
+          <svg viewBox="0 0 360 340" role="img" aria-labelledby="mirror-title mirror-desc">
+            <title id="mirror-title">A real camera and its reflected virtual camera</title>
+            <desc id="mirror-desc">In a two-dimensional cross-section, scene point X and camera C are left of a vertical mirror. Virtual camera C prime lies symmetrically to the right. A solid reflected path runs from X to the mirror to C; its dashed continuation reaches C prime. A second solid line connects X directly to C. Both physical rays intersect a schematic image plane in front of C.</desc>
+            <g class="mvg-lines"><path d="M180 48v234"/><path d="M70 65L180 139.894L55 225"/><path d="M70 65L55 225"/><path d="M36 200h84"/></g>
+            <g class="mvg-lines mvg-dashed"><path d="M180 139.894L305 225"/><path d="M55 225h250"/></g>
+            <g class="mvg-points"><circle cx="70" cy="65" r="3.5"/><circle cx="55" cy="225" r="3.5"/><circle cx="180" cy="139.894" r="3"/><circle cx="57.344" cy="200" r="2.5"/><circle cx="91.765" cy="200" r="2.5"/></g>
+            <circle class="mvg-virtual" cx="305" cy="225" r="4"/>
+            <g class="mvg-labels"><text x="70" y="45">X</text><text x="180" y="29">Mirror plane</text><text x="73" y="185">Image plane</text><text x="55" y="251">C · real</text><text x="303" y="251">C′ · virtual</text><text x="180" y="280">Reflected camera centers</text></g>
+            <g class="mvg-lines"><path d="M26 312h26"/></g><path class="mvg-lines mvg-dashed" d="M193 312h26"/>
+            <g class="mvg-labels mvg-legend"><text x="62" y="316">Physical ray</text><text x="229" y="316">Unfolded ray</text></g>
+          </svg>
+          <figcaption>New schematic, not an experimental setup. The image plane is drawn in front of the camera for clarity.</figcaption>
+        </figure>
+
+        <p>In the real camera’s coordinate system, let the mirror have unit normal <var>n</var> and equation <var>n</var><sup>T</sup><var>X</var> = <var>d</var>, with the camera off the mirror plane. Reflection maps a point to <var>X</var>′ = <var>X</var> − 2(<var>n</var><sup>T</sup><var>X</var> − <var>d</var>)<var>n</var>. The point, its reflection, and the mirror normal therefore lie in a common linear plane through the camera center. Their image rays obey an epipolar constraint.</p>
+        <p>Write [<var>n</var>]<sub>×</sub> for the matrix implementing the cross product with <var>n</var>. In a common image-coordinate convention, with the same invertible calibration matrix <var>K</var> applied to both image regions, the reflective fundamental matrix is proportional to:</p>
+        <div class="equation mvg-equation" role="math" aria-label="F is proportional to K inverse transpose times the cross-product matrix of n times K inverse; F transpose equals negative F"><span>F ∝ K<sup>−T</sup>[n]<sub>×</sub>K<sup>−1</sup></span><span>F<sup>T</sup> = −F</span></div>
+        <p>The skew symmetry follows from the cross-product matrix and the matching coordinate transforms on both sides. It is specific to this configuration and convention: independently changing the two image coordinate systems need not preserve that matrix appearance. Reflection also reverses handedness; its linear part has determinant −1 and should not silently be treated as an ordinary camera rotation. The <a href="https://home.mis.u-picardie.fr/~fabio/Eng/documenti/articoli/MaScMoPr_Springer09.pdf">academic treatment of planar-mirror geometry by Mariottini and colleagues</a> provides the public technical context.</p>
+      </section>
+
+      <section aria-labelledby="symbolic-numerical">
+        <h2 id="symbolic-numerical">Symbolic verification vs numerical testing</h2>
+        <p>Symbolic work is particularly useful when the question concerns an exact relationship: whether an invariant is preserved, whether constraints are mutually compatible, or which assumptions a derivation needs. It can expose a missing nonzero condition or reveal that an apparently general result depends on a special camera configuration.</p>
+        <p>Numerical testing asks different questions. Measurements are noisy; matrices can be nearly singular rather than exactly singular; floating-point calculations can amplify small perturbations. An identity verified over exact symbols does not establish that an estimator is stable, that correspondences are correct, or that a camera model describes real observations.</p>
+        <p>I would use the two modes together. Symbolic reasoning identifies what should hold and where it may cease to apply. Numerical experiments then examine how an implementation behaves as it approaches those boundaries. A rank condition can be exact on paper while requiring a scale-aware numerical decision in software. Neither part supplies the other automatically.</p>
+      </section>
+
+      <section aria-labelledby="retrospective">
+        <h2 id="retrospective">What I find interesting about it now</h2>
+        <p>Today I think of this approach as <em>executable geometry</em>, or an executable specification for geometric vision. That is my present-day interpretation, rather than a claim about the terminology we used in 2011. The useful idea is to make the mathematical assumptions of a component available to inspection and testing alongside its implementation.</p>
+        <p>A modern version could use <a href="https://docs.sympy.org/latest/tutorials/intro-tutorial/simplification.html">SymPy</a> or another symbolic system to derive checks, property-based testing to generate admissible configurations, and randomized numerical stress tests to explore difficult cases. For a homography routine, for example, one could check invariance to homogeneous rescaling and separately generate nearly degenerate correspondences. These would test different obligations, rather than repeat a single successful example.</p>
+        <p>Such checks could sit around calibration, structure-from-motion (SfM), simultaneous localization and mapping (SLAM), or reconstruction modules. Their value would depend on choosing the right contracts: broad enough to catch mistakes, explicit enough to distinguish an invalid input from numerical sensitivity, and inexpensive enough to use. This is a proposed direction, not a capability I am attributing to the 2011 implementation.</p>
+      </section>
+
+      <section aria-labelledby="research-question">
+        <h2 id="research-question">A modern research question</h2>
+        <p class="research-question">Can symbolic geometric constraints serve as executable contracts around numerical vision pipelines — catching invalid assumptions, degeneracies, or implementation errors before they propagate through calibration, SfM, SLAM, or reconstruction?</p>
+        <p class="mvg-question-followup">A convincing answer would need examples of faults actually detected, clear treatment of near-degenerate data, and evidence about computational cost. The question is how to connect exact statements to fallible measurements without confusing their different kinds of certainty.</p>
+      </section>
+
+      <section aria-labelledby="looking-back">
+        <h2 id="looking-back">Looking back</h2>
+        <p>The project sits at an intersection that remains important to me: mathematics, software, and computer vision. Geometry is something we derive on paper, but it can also be encoded, executed, tested, and interrogated. Making that translation carefully can reveal both the strength of a model and the conditions under which it stops answering the question we intended to ask.</p>
+      </section>
+
+      <aside class="article-references" aria-labelledby="public-references">
+        <h2 id="public-references">Public references</h2>
+        <p>Richard Hartley and Andrew Zisserman. <cite>Multiple View Geometry in Computer Vision</cite>, second edition. Cambridge University Press, 2004. ISBN 0521540518. <a href="https://www.robots.ox.ac.uk/~vgg/hzbook/">Authors’ official book page</a>.</p>
+        <p>Gian Luca Mariottini, Stefano Scheggi, Fabio Morbidi, and Domenico Prattichizzo. “Catadioptric Stereo with Planar Mirrors: Multiple-View Geometry and Camera Localization.” In <cite>Visual Servoing via Advanced Numerical Methods</cite>, edited by Graziano Chesi and Koichi Hashimoto, Springer, 2010, pp. 3–21. <a href="https://home.mis.u-picardie.fr/~fabio/Eng/documenti/articoli/MaScMoPr_Springer09.pdf">Author-hosted technical chapter (PDF)</a>.</p>
+        <p>Wolfram Language documentation: <a href="https://reference.wolfram.com/language/ref/Simplify.html">Simplify</a>, <a href="https://reference.wolfram.com/language/ref/Reduce.html">Reduce</a>, and <a href="https://reference.wolfram.com/language/ref/Solve.html">Solve</a>. <a href="https://docs.sympy.org/latest/tutorials/intro-tutorial/simplification.html">SymPy documentation on simplification</a> supports the present-day discussion.</p>
+      </aside>
+      <p class="article-return"><a href="../index.html#notes">← Back to Research Notes</a></p>
+
+    </article>
+  </main>
+  <footer class="footer">
+    <div class="container footer-logo-row">
+      <span class="footer-logo" role="img" aria-label="KORIVISION"></span>
+    </div>
+    <div class="container footer-inner">
+      <p>© 2026 KoriVision. Korin Lifshits.</p>
+      <p>Engineering robust perception for the physical world.</p>
+    </div>
+  </footer>
+</body>
+</html>

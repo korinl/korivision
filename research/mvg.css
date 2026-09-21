@@ -1,0 +1,99 @@
+/* Loaded only by the new multiple-view geometry note. */
+.mvg-note .mvg-equation {
+  display: block;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  letter-spacing: 0;
+}
+
+.mvg-equation > span:not(.mvg-fraction) {
+  display: inline-block;
+  margin-inline: 0.4em;
+}
+
+.mvg-equation sub {
+  font-size: 0.7em;
+}
+
+.mvg-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mvg-fraction > span {
+  padding-inline: 0.25em;
+}
+
+.mvg-fraction > span + span {
+  border-top: 1px solid #93a8bb;
+}
+
+.mvg-topics {
+  margin: 26px 0;
+}
+
+.mvg-topics dt {
+  margin-top: 24px;
+  color: #e5edf5;
+  font-weight: 600;
+}
+
+.mvg-topics dd {
+  margin: 6px 0 0;
+}
+
+.mvg-flow {
+  max-width: 420px;
+}
+
+.mvg-mirror {
+  max-width: 460px;
+}
+
+.mvg-lines,
+#mvg-arrow path {
+  fill: none;
+  stroke: #93a8bb;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+
+.mvg-dashed {
+  stroke-dasharray: 4 4;
+}
+
+.mvg-points {
+  fill: #bdcdda;
+}
+
+.mvg-virtual {
+  fill: #091321;
+  stroke: #bdcdda;
+  stroke-width: 1.4;
+}
+
+.mvg-labels {
+  fill: #bdcdda;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  text-anchor: middle;
+}
+
+.mvg-legend {
+  font-size: 12px;
+  text-anchor: start;
+}
+
+.mvg-note .mvg-question-followup {
+  margin-top: 24px;
+}
+
+@media (max-width: 400px) {
+  .mvg-note .mvg-equation {
+    padding-inline: 6px;
+    font-size: 1.05rem;
+  }
+}
