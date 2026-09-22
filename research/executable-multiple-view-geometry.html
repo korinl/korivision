@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Executable Multiple-View Geometry | KoriVision</title>
-  <meta name="description" content="Korin Lifshits on symbolic verification, projective geometry, and a 2011 Mathematica project with Prof. Michael Werman.">
+  <meta name="description" content="Korin Lifshits on symbolic verification, projective geometry, and a Mathematica project with Prof. Michael Werman.">
   <meta name="author" content="Korin Lifshits">
   <meta name="theme-color" content="#07111f">
   <meta property="og:type" content="article">
@@ -88,7 +88,7 @@
 
       <section aria-labelledby="returning-to-geometry">
         <h2 id="returning-to-geometry">Why I am revisiting this</h2>
-        <p>In 2011, working with Prof. Michael Werman at the Hebrew University Computer Vision Lab, I explored how multiple-view geometry could be expressed as executable symbolic mathematics. The project used Mathematica and computer algebra to formulate and check relationships from geometric computer vision, using Richard Hartley and Andrew Zisserman’s <cite>Multiple View Geometry in Computer Vision</cite> as the organizing reference.</p>
+        <p>While working with Prof. Michael Werman at the Hebrew University Computer Vision Lab, I explored how multiple-view geometry could be expressed as executable symbolic mathematics. The project used Mathematica and computer algebra to formulate and check relationships from geometric computer vision, using Richard Hartley and Andrew Zisserman’s <cite>Multiple View Geometry in Computer Vision</cite> as the organizing reference.</p>
         <p>The attraction was the movement between a geometric argument and a computation. A statement about cameras, points, lines, or planes could be translated into variables and equations. Those equations could then be manipulated, simplified, or solved, with the assumptions made explicit enough to inspect. Writing that translation was itself mathematical work: the choice of representation often determined whether the calculation clarified the geometry or obscured it.</p>
         <p>The project aimed at a broad executable treatment of the material; the surviving implementation contains examples spanning several major parts of multiple-view geometry. I am returning to it because the underlying question still interests me: how can software help us examine a geometric model before we entrust a numerical pipeline to it?</p>
       </section>
@@ -178,9 +178,9 @@
 
       <section aria-labelledby="retrospective">
         <h2 id="retrospective">What I find interesting about it now</h2>
-        <p>Today I think of this approach as <em>executable geometry</em>, or an executable specification for geometric vision. That is my present-day interpretation, rather than a claim about the terminology we used in 2011. The useful idea is to make the mathematical assumptions of a component available to inspection and testing alongside its implementation.</p>
+        <p>Today I think of this approach as <em>executable geometry</em>, or an executable specification for geometric vision. That is my present-day interpretation, rather than a claim about the terminology we used during the project. The useful idea is to make the mathematical assumptions of a component available to inspection and testing alongside its implementation.</p>
         <p>A modern version could use <a href="https://docs.sympy.org/latest/tutorials/intro-tutorial/simplification.html">SymPy</a> or another symbolic system to derive checks, property-based testing to generate admissible configurations, and randomized numerical stress tests to explore difficult cases. For a homography routine, for example, one could check invariance to homogeneous rescaling and separately generate nearly degenerate correspondences. These would test different obligations, rather than repeat a single successful example.</p>
-        <p>Such checks could sit around calibration, structure-from-motion (SfM), simultaneous localization and mapping (SLAM), or reconstruction modules. Their value would depend on choosing the right contracts: broad enough to catch mistakes, explicit enough to distinguish an invalid input from numerical sensitivity, and inexpensive enough to use. This is a proposed direction, not a capability I am attributing to the 2011 implementation.</p>
+        <p>Such checks could sit around calibration, structure-from-motion (SfM), simultaneous localization and mapping (SLAM), or reconstruction modules. Their value would depend on choosing the right contracts: broad enough to catch mistakes, explicit enough to distinguish an invalid input from numerical sensitivity, and inexpensive enough to use. This is a proposed direction, not a capability I am attributing to the original implementation.</p>
       </section>
 
       <section aria-labelledby="research-question">
